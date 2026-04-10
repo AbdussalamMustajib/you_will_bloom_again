@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You Will Bloom Again</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Georgia,serif;background:#fffbf0}
+
+  .screen{display:none !important;min-height:100svh;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px 72px;position:relative;text-align:center}
+  .screen.on{display:flex !important}
+
+  /* S0 */
+  #s0{background:linear-gradient(160deg,#fef9e8 0%,#fdefc8 50%,#fce4a8 100%)}
+  .sf-big{font-size:clamp(64px,15vw,96px);animation:popIn .8s cubic-bezier(.34,1.56,.64,1) both;display:block;filter:drop-shadow(0 4px 12px rgba(180,120,0,.18))}
+  @keyframes popIn{from{transform:scale(0) rotate(-15deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+  .heart-pulse{display:inline-block;animation:heartBeat 1.2s ease-in-out 1.2s infinite}
+  @keyframes heartBeat{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+  /* Letter */
+  .letter-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#f0c040,#e88040,#d04080);border-radius:20px 20px 0 0}
+
+  /* Garden overlay */
+  .overlay{display:none;position:absolute;inset:0;background:rgba(20,40,10,.55);align-items:center;justify-content:center;z-index:20;padding:20px;border-radius:inherit}
+  .overlay.show{display:flex}
+
+  /* S3 timeline */
+  #s3{background:linear-gradient(180deg,#1c0f30 0%,#2e1848 40%,#5a1830 70%,#8a3010 90%,#c06010 100%)}
+  .tl{max-width:min(360px,90vw);width:100%;position:relative}
+  .tl::before{content:'';position:absolute;left:22px;top:10px;bottom:10px;width:2px;background:linear-gradient(to bottom,#ff5050,#ff9030,#ffc830,#70d050,#30c090,#50a0ff);border-radius:2px}
+  .tli{display:flex;gap:14px;margin-bottom:22px;align-items:flex-start;opacity:0;transform:translateX(-12px);transition:all .5s}
+  .tli.vis{opacity:1;transform:translateX(0)}
+  .tli-dot{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;border:1.5px solid rgba(255,255,255,.15)}
+  .tli-ph{font-size:10px;font-weight:700;letter-spacing:.08em;color:rgba(240,200,100,.75);text-transform:uppercase;margin-bottom:3px}
+  .tli-desc{font-size:12px;line-height:1.6;color:rgba(255,255,255,.65);text-align:left}
+
+  /* S4 open when */
+  #s4{background:linear-gradient(140deg,#fff8ef 0%,#fdeedd 100%)}
+  .ow-msg{display:none;border-left:3px solid #f0a020}
+  .ow-msg.show{display:block;animation:fadeUp .4s ease-out}
+
+  /* S5 finale */
+  #s5{background:linear-gradient(180deg,#08060f 0%,#180b2a 20%,#380f3a 45%,#681808 70%,#c05808 85%,#f0a018 100%)}
+  .finale-sf{font-size:clamp(72px,18vw,110px);display:block;animation:bloomBig 1.8s cubic-bezier(.34,1.56,.64,1) .3s both,sway 4s ease-in-out 2.5s infinite;text-align:center;filter:drop-shadow(0 0 20px rgba(255,190,40,.4))}
+  @keyframes bloomBig{from{transform:scale(0) rotate(-20deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+  @keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg) scale(1.04)}}
+  .finale-txt{opacity:0;animation:fadeUp 1s ease-out 2.2s forwards}
+  .petals{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+  .petal{position:absolute;font-size:15px;animation:fall linear infinite;opacity:.6}
+  @keyframes fall{from{transform:translateY(-30px) rotate(0deg);opacity:.7}to{transform:translateY(110svh) rotate(720deg);opacity:0}}
+
+  /* Music & nav */
+  .nd{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .25s;border:1px solid rgba(255,255,255,.2)}
+  .nd.on{background:#f0c030;transform:scale(1.35)}
+  .vb{width:3px;border-radius:2px;background:#ffd050}
+  @keyframes vizA{from{height:4px}to{height:16px}}
+
+  /* Tablet/desktop layout boost */
+  @media(min-width:640px){
+    .screen{padding:48px 40px 80px}
+  }
+  @media(min-width:1024px){
+    .screen{padding:60px 80px 88px}
+    .tl::before{left:26px}
+    .tli-dot{width:52px;height:52px;font-size:22px}
+  }
+</style>
+</head>
+<body>
+
+<div id="app" class="relative overflow-hidden">
+  <!-- Nav Dots -->
+  <div id="ndots" class="fixed right-2.5 sm:right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-30"></div>
+
+  <!-- SCREEN 0 -->
+  <div id="s0" class="screen">
+    <span class="sf-big">&#127803;</span>
+    <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-amber-900 mt-5 mb-2.5" style="animation:fadeUp .7s .4s both">
+      Mungkin hari ini terasa berat...
+    </h1>
+    <p class="text-sm sm:text-base text-amber-700 leading-relaxed max-w-xs sm:max-w-sm" style="animation:fadeUp .7s .65s both">
+      Tapi kamu tetap berharga dan berarti banget buat aku <span class="heart-pulse">&#129293;</span>
+    </p>
+    <button onclick="go(1)"
+      class="mt-7 px-8 py-3 sm:px-10 sm:py-3.5 bg-white border-2 border-amber-500 rounded-full text-sm sm:text-base font-semibold text-amber-800 shadow-md hover:bg-amber-50 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-250 cursor-pointer"
+      style="animation:fadeUp .7s 1s both;font-family:Georgia,serif">
+      Klik di sini ya &nbsp;&#10084;&#65039;
+    </button>
+  </div>
+
+  <!-- SCREEN 1: LETTER -->
+  <div id="s1" class="screen" style="background:linear-gradient(150deg,#fff8ee 0%,#fef0d4 100%)">
+    <div class="letter-wrap relative bg-white rounded-2xl p-6 sm:p-8 md:p-10 w-full max-w-sm sm:max-w-md md:max-w-lg shadow-xl border border-amber-200/60 overflow-hidden text-left">
+      <span class="text-3xl sm:text-4xl block text-center mb-3.5">&#128140;</span>
+      <h2 class="text-base sm:text-lg md:text-xl text-amber-900 mb-4 leading-snug text-center">
+        Untuk kamu, yang lagi berjuang hari ini...
+      </h2>
+      <div class="text-xs sm:text-sm md:text-base leading-relaxed text-amber-900/80 space-y-3">
+        <p>Aku tahu ada hari-hari yang terasa terlalu berat. Hari di mana bahkan bangun dari tempat tidur pun sudah butuh keberanian yang luar biasa.</p>
+        <p>Dan aku mau kamu tahu — itu tidak apa-apa. Kamu tidak harus selalu kuat. Kamu tidak harus baik-baik saja setiap saat.</p>
+        <p>Bunga matahari pun pernah cuma jadi benih di dalam tanah yang gelap. Tapi ia tetap tumbuh, perlahan, menuju cahaya — dan kamu juga akan begitu.</p>
+        <p>Aku di sini. Selalu. Tidak kemana-mana.</p>
+        <p class="italic text-amber-600 text-sm sm:text-base pt-1">Dengan cinta, selalu untukmu &#127803;</p>
+      </div>
+      <div class="flex flex-wrap gap-2.5 justify-center mt-5">
+        <button onclick="go(0)" class="px-5 py-2 sm:px-6 sm:py-2.5 border border-amber-500 rounded-full text-xs sm:text-sm text-amber-800 bg-amber-50 hover:bg-amber-100 transition-all cursor-pointer" style="font-family:Georgia,serif">← Kembali</button>
+        <button onclick="go(2)" class="px-5 py-2 sm:px-6 sm:py-2.5 border border-amber-400 rounded-full text-xs sm:text-sm text-amber-900 bg-amber-400 hover:bg-amber-300 transition-all cursor-pointer font-semibold" style="font-family:Georgia,serif">Jelajahi Taman &#127800;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: GARDEN -->
+  <div id="s2" class="screen" style="background:linear-gradient(180deg,#e8f5d0 0%,#d0eca0 60%,#b8e070 100%)">
+    <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-green-900 mb-1">&#127803; Sunflower Garden</h2>
+    <p class="text-xs sm:text-sm text-green-700/80 mb-5 sm:mb-7">Sentuh setiap bunga — ada pesan khusus untukmu</p>
+
+    <div id="garden" class="grid grid-cols-3 gap-2.5 sm:gap-3.5 w-full max-w-xs sm:max-w-sm md:max-w-md mb-5"></div>
+
+    <div class="flex flex-wrap gap-2.5 justify-center">
+      <button onclick="go(1)" class="px-5 py-2 sm:px-6 sm:py-2.5 border border-green-600/50 rounded-full text-xs sm:text-sm text-green-800 bg-white/60 hover:bg-white/90 transition-all cursor-pointer" style="font-family:Georgia,serif">← Surat</button>
+      <button onclick="go(3)" class="px-5 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm text-green-900 font-semibold bg-green-400 border border-green-400 hover:bg-green-300 transition-all cursor-pointer" style="font-family:Georgia,serif">Perjalananku →</button>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay rounded-2xl" id="ov">
+      <div class="bg-white rounded-2xl p-7 sm:p-9 max-w-xs sm:max-w-sm w-full text-center shadow-2xl">
+        <span id="ov-em" class="text-5xl sm:text-6xl block mb-3.5"></span>
+        <p id="ov-q" class="text-sm sm:text-base md:text-lg text-green-950 leading-relaxed mb-5"></p>
+        <button onclick="closeOv()" class="bg-amber-50 border-none px-6 py-2 rounded-full text-xs sm:text-sm text-amber-900 hover:bg-amber-100 transition-all cursor-pointer" style="font-family:Georgia,serif">Tutup ✕</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: TIMELINE -->
+  <div id="s3" class="screen">
+    <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-amber-200 mb-1">Perjalananmu</h2>
+    <p class="text-xs sm:text-sm text-amber-300/55 mb-7 sm:mb-9">Setiap musim membawamu lebih dekat ke cahaya</p>
+
+    <div class="tl mb-6 px-1" id="tl"></div>
+
+    <div class="flex flex-wrap gap-2.5 justify-center">
+      <button onclick="go(2)" class="px-5 py-2 sm:px-6 sm:py-2.5 border rounded-full text-xs sm:text-sm cursor-pointer transition-all hover:bg-white/10" style="border-color:rgba(240,200,100,.4);color:#f0d888;background:rgba(255,255,255,.05);font-family:Georgia,serif">← Taman</button>
+      <button onclick="go(4)" class="px-5 py-2 sm:px-6 sm:py-2.5 border rounded-full text-xs sm:text-sm cursor-pointer transition-all hover:bg-white/10" style="border-color:rgba(240,200,100,.4);color:#f0d888;background:rgba(255,255,255,.05);font-family:Georgia,serif">Open When →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: OPEN WHEN -->
+  <div id="s4" class="screen">
+    <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-amber-950 mb-1">Open When...</h2>
+    <p class="text-xs sm:text-sm text-amber-700/60 mb-5 sm:mb-7">Buka ketika kamu benar-benar membutuhkannya</p>
+
+    <div id="owgrid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3.5 w-full max-w-xs sm:max-w-sm md:max-w-lg mb-5"></div>
+
+    <div id="owmsg" class="ow-msg bg-white rounded-2xl p-6 sm:p-8 w-full max-w-xs sm:max-w-sm md:max-w-md shadow-md text-left">
+      <h3 id="owt" class="text-base sm:text-lg font-bold text-amber-950 mb-3"></h3>
+      <div id="owc" class="text-xs sm:text-sm md:text-base leading-relaxed text-amber-900/80 space-y-2.5"></div>
+      <span onclick="backOw()" class="text-xs sm:text-sm text-amber-600 cursor-pointer underline mt-4 inline-block hover:text-amber-800 transition-colors">← kembali ke daftar</span>
+    </div>
+
+    <div id="ownav" class="flex flex-wrap gap-2.5 justify-center mt-1">
+      <button onclick="go(3)" class="px-5 py-2 sm:px-6 sm:py-2.5 border border-amber-400/50 rounded-full text-xs sm:text-sm text-amber-800 bg-amber-50 hover:bg-amber-100 transition-all cursor-pointer" style="font-family:Georgia,serif">← Timeline</button>
+      <button onclick="go(5)" class="px-5 py-2 sm:px-6 sm:py-2.5 border border-amber-400 rounded-full text-xs sm:text-sm text-amber-900 font-semibold bg-amber-400 hover:bg-amber-300 transition-all cursor-pointer" style="font-family:Georgia,serif">Penutup &#127803;</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 5: FINALE -->
+  <div id="s5" class="screen">
+    <div class="petals" id="petals"></div>
+    <span class="finale-sf">&#127803;</span>
+    <div class="finale-txt max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto px-2">
+      <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-snug mt-5 mb-3.5" style="color:#fff8e0;text-shadow:0 2px 16px rgba(255,160,40,.3)">
+        Kamu akan selalu mekar lagi
+      </h1>
+      <p class="text-xs sm:text-sm md:text-base leading-relaxed mb-2.5" style="color:rgba(255,240,190,.78)">
+        Bunga matahari tidak pernah berhenti menghadap matahari — bahkan di hari paling mendung sekalipun. Itulah kamu.
+      </p>
+      <p class="text-xs sm:text-sm md:text-base leading-relaxed mb-4" style="color:rgba(255,240,190,.78)">
+        Apapun yang terjadi, aku ada. Bukan hanya di hari-hari indahmu, tapi justru terutama di hari-hari yang paling sulit.
+      </p>
+      <div class="inline-block px-6 py-3 sm:px-7 sm:py-3.5 rounded-full italic text-sm sm:text-base" style="background:rgba(255,195,60,.1);border:1px solid rgba(255,195,60,.35);color:#ffd070;font-family:Georgia,serif">
+        "Aku di sini. Hari ini, esok, selamanya." &#127803;
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-2.5 justify-center mt-6 relative z-10" style="opacity:0;animation:fadeUp .8s 3.2s both">
+      <button onclick="go(4)" class="px-5 py-2 sm:px-6 sm:py-2.5 border rounded-full text-xs sm:text-sm cursor-pointer transition-all hover:bg-white/10" style="border-color:rgba(240,200,100,.35);color:#f0d888;background:rgba(255,255,255,.05);font-family:Georgia,serif">← Open When</button>
+      <button onclick="go(0)" class="px-5 py-2 sm:px-6 sm:py-2.5 border rounded-full text-xs sm:text-sm cursor-pointer transition-all hover:bg-white/10" style="border-color:rgba(240,200,100,.35);color:#f0d888;background:rgba(255,255,255,.05);font-family:Georgia,serif">Mulai lagi ↺</button>
+    </div>
+  </div>
+
+  <!-- MUSIC BAR -->
+  <div class="fixed bottom-0 left-0 right-0 h-12 sm:h-14 flex items-center justify-center gap-3 sm:gap-4 z-30 px-4" style="background:rgba(15,10,30,.88);border-top:1px solid rgba(255,195,60,.12)">
+    <div class="flex gap-1 items-center" id="vl">
+      <div class="vb" style="height:6px"></div>
+      <div class="vb" style="height:10px"></div>
+      <div class="vb" style="height:5px"></div>
+    </div>
+    <button id="mbtn" onclick="toggleMusic()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-sm cursor-pointer hover:opacity-80 transition-all" style="border:1px solid rgba(255,195,60,.3);background:none;color:#ffd060">&#9834;</button>
+    <span id="mlbl" class="text-xs sm:text-sm truncate max-w-40 sm:max-w-56" style="color:rgba(255,210,100,.55);font-family:Georgia,serif;letter-spacing:.04em">Sentuh untuk musik lembut</span>
+    <div class="flex gap-1 items-center" id="vr">
+      <div class="vb" style="height:9px"></div>
+      <div class="vb" style="height:6px"></div>
+      <div class="vb" style="height:11px"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const flowers=[
+  {e:'\uD83C\uDF3B',n:'Matahari',q:'Tidak apa-apa kalau hari ini terasa gelap. Bahkan bunga matahari pun menunggu pagi untuk kembali bersinar.'},
+  {e:'\uD83C\uDF3B',n:'Matahari',q:'Kamu tidak harus selalu kuat, tapi kamu selalu bisa bangkit lagi seperti matahari esok hari.'},
+  {e:'\uD83C\uDF3B',n:'Matahari',q:'Tetaplah menghadap ke arah yang membuatmu tumbuh, bukan yang membuatmu layu.'},
+  {e:'\uD83C\uDF38',n:'Sakura',q:'Bahkan bunga paling indah pun pernah menjadi kuncup. Waktumu akan tiba, sabar ya.'},
+  {e:'\uD83C\uDF37',n:'Tulip',q:'Setelah musim dingin yang terpanjang pun, musim semi selalu datang tepat waktu.'},
+  {e:'\uD83C\uDF3A',n:'Hibiscus',q:'Kamu sudah bertahan sejauh ini. Itu saja sudah bukti betapa luar biasanya dirimu.'},
+  {e:'\uD83C\uDF3C',n:'Daisy',q:'Hari-hari kecil yang biasa pun penuh keajaiban, termasuk keberadaanmu di dunia ini.'},
+  {e:'\uD83C\uDF39',n:'Mawar',q:'Duri tidak mengurangi keindahan mawar. Lukamu tidak mengurangi nilaimu sama sekali.'},
+  {e:'\uD83C\uDF3E',n:'Lavender',q:'Ketenangan itu tidak datang dari luar, tapi dari cara kamu memeluk dirimu sendiri.'},
+];
+
+const tls=[
+  {e:'\uD83C\uDF11',bg:'#1e1030',ph:'Titik paling gelap',desc:'Ketika segalanya terasa mustahil. Di sini kekuatanmu lahir diam-diam.',d:0},
+  {e:'\uD83C\uDF27',bg:'#2a1840',ph:'Musim hujan',desc:'Air mata bukan kelemahan, ia adalah hujan yang menyuburkan benih harapan.',d:.14},
+  {e:'\uD83C\uDF31',bg:'#1a3818',ph:'Benih mulai tumbuh',desc:'Satu langkah kecil. Satu napas dalam. Perlahan kamu mulai bangkit.',d:.28},
+  {e:'\uD83C\uDF24',bg:'#3a2c10',ph:'Fajar mulai terasa',desc:'Cahaya mulai menerobos masuk. Kamu mulai bisa melihat jalan lagi.',d:.42},
+  {e:'\uD83C\uDF3B',bg:'#4a3208',ph:'Mekar kembali',desc:'Kamu tumbuh lebih kuat, lebih dalam, lebih indah dari sebelumnya.',d:.56},
+  {e:'\u2600\uFE0F',bg:'#3a2a08',ph:'Cahaya penuh',desc:'Inilah tujuanmu dan aku akan selalu bersamamu sampai di titik ini.',d:.7}
+];
+
+const ows=[
+  {e:'\uD83D\uDE22',c:'Kamu Menangis',t:'Open When: Kamu Sedang Menangis',ms:['Menangis bukan berarti lemah. Itu berarti kamu cukup berani untuk merasakan sesuatu yang nyata.','Biarkan air matamu mengalir. Jangan ditahan. Setelah ini kamu akan terasa lebih ringan, aku janji.','Aku di sini bersamamu, bahkan dari kejauhan. Kamu tidak sendirian.']},
+  {e:'\uD83D\uDE14',c:'Kamu Sendirian',t:'Open When: Kamu Merasa Sendirian',ms:['Kesendirian bukan berarti tidak ada yang peduli. Aku peduli \u2014 jauh lebih dari yang bisa kamu bayangkan.','Di saat kamu merasa paling sunyi, ingatlah: ada seseorang yang selalu memikirkanmu.','Kamu tidak pernah benar-benar sendirian. Aku ada di setiap kenangan yang kita ciptakan bersama.']},
+  {e:'\uD83D\uDE24',c:'Kamu Marah',t:'Open When: Kamu Sedang Marah',ms:['Kemarahanmu valid. Kamu berhak merasa marah \u2014 itu manusiawi.','Tapi jangan biarkan amarah itu membakarmu lebih lama dari yang diperlukan. Kamu terlalu berharga.','Tarik napas. Lepaskan. Aku di sini saat kamu siap untuk bicara.']},
+  {e:'\uD83E\uDD14',c:'Kamu Ragu-Ragu',t:'Open When: Kamu Meragukan Dirimu',ms:['Kamu jauh lebih mampu dari yang kamu percaya. Keraguan hanyalah bayangan, bukan kenyataan.','Ingat semua yang sudah kamu lalui dan berhasil kamu atasi. Semuanya kamu yang melakukannya.','Aku melihat kekuatanmu \u2014 bahkan di saat kamu tidak bisa melihatnya sendiri.']},
+  {e:'\uD83E\uDD71',c:'Kamu Kelelahan',t:'Open When: Kamu Sangat Lelah',ms:['Istirahat bukan menyerah. Istirahat adalah cara paling bijak untuk melanjutkan perjalanan.','Kamu boleh berhenti sejenak. Kamu tidak harus selalu bergerak maju.','Tidur yang cukup, makan yang baik. Dunia bisa menunggu \u2014 tubuh dan jiwamu tidak bisa.']},
+  {e:'\uD83C\uDF19',c:'Tengah Malam',t:'Open When: Kamu Tidak Bisa Tidur',ms:['Di tengah malam yang sunyi ini \u2014 kamu aman. Kamu di tempat yang tepat.','Pikiranmu sedang kerja lembur. Biarkan ia tahu bahwa segalanya akan baik-baik saja.','Besok pagi akan tiba. Dan aku harap kamu bangun dengan hati yang sedikit lebih ringan.']}
+];
+
+let cur=0;
+
+function buildNav(){
+  const nd=document.getElementById('ndots');
+  for(let i=0;i<6;i++){
+    const d=document.createElement('div');
+    d.className='nd'+(i===0?' on':'');
+    d.onclick=()=>go(i);
+    nd.appendChild(d);
+  }
+}
+
+function go(n){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.getElementById('s'+n).classList.add('on');
+  document.querySelectorAll('.nd').forEach((d,i)=>d.classList.toggle('on',i===n));
+  cur=n;
+  if(n===3)animTl();
+}
+
+function buildGarden(){
+  const g=document.getElementById('garden');
+  flowers.forEach(f=>{
+    const b=document.createElement('button');
+    b.className='bg-white rounded-2xl p-3 sm:p-4 cursor-pointer flex flex-col items-center gap-1.5 shadow-md transition-all duration-220 border border-green-200/40 hover:-translate-y-1 hover:scale-105 hover:shadow-xl';
+    b.innerHTML=`<span class="text-3xl sm:text-4xl block">${f.e}</span><span class="text-xs text-green-700 font-semibold tracking-wide">${f.n}</span>`;
+    b.onclick=()=>showOv(f);
+    g.appendChild(b);
+  });
+}
+
+function showOv(f){
+  document.getElementById('ov-em').textContent=f.e;
+  document.getElementById('ov-q').textContent=f.q;
+  document.getElementById('ov').classList.add('show');
+}
+function closeOv(){document.getElementById('ov').classList.remove('show')}
+
+function buildTl(){
+  const tl=document.getElementById('tl');
+  tls.forEach((t,i)=>{
+    const item=document.createElement('div');
+    item.className='tli';
+    item.id='tli'+i;
+    item.innerHTML=`<div class="tli-dot" style="background:${t.bg}">${t.e}</div><div class="pt-0.5"><div class="tli-ph">${t.ph}</div><div class="tli-desc">${t.desc}</div></div>`;
+    tl.appendChild(item);
+  });
+}
+
+function animTl(){
+  tls.forEach((_,i)=>{
+    setTimeout(()=>{
+      const el=document.getElementById('tli'+i);
+      if(el)el.classList.add('vis');
+    },i*180+100);
+  });
+}
+
+function buildOW(){
+  const g=document.getElementById('owgrid');
+  ows.forEach(o=>{
+    const c=document.createElement('div');
+    c.className='bg-white rounded-2xl p-3.5 sm:p-4 cursor-pointer border border-amber-300/20 transition-all duration-220 text-center shadow-sm hover:-translate-y-1 hover:shadow-md';
+    c.innerHTML=`<span class="text-2xl sm:text-3xl block mb-1.5">${o.e}</span><div class="text-xs sm:text-sm font-semibold text-amber-900/80">${o.c}</div>`;
+    c.onclick=()=>showOW(o);
+    g.appendChild(c);
+  });
+}
+
+function showOW(o){
+  document.getElementById('owgrid').style.display='none';
+  document.getElementById('ownav').style.display='none';
+  document.getElementById('owt').textContent=o.t;
+  document.getElementById('owc').innerHTML=o.ms.map(p=>`<p>${p}</p>`).join('');
+  document.getElementById('owmsg').classList.add('show');
+}
+
+function backOw(){
+  document.getElementById('owgrid').style.display='grid';
+  document.getElementById('ownav').style.display='flex';
+  document.getElementById('owmsg').classList.remove('show');
+}
+
+function buildPetals(){
+  const p=document.getElementById('petals');
+  const items=['\uD83C\uDF3B','\uD83C\uDF38','\u2728','\uD83C\uDF3C','\uD83D\uDC9B','\uD83C\uDF3A'];
+  for(let i=0;i<14;i++){
+    const el=document.createElement('div');
+    el.className='petal';
+    el.textContent=items[i%items.length];
+    el.style.left=Math.random()*100+'%';
+    el.style.animationDuration=(5+Math.random()*7)+'s';
+    el.style.animationDelay=Math.random()*9+'s';
+    p.appendChild(el);
+  }
+}
+
+const audio = new Audio('music.mp3');
+audio.loop = true;
+audio.volume = 0.5;
+let playing = false;
+
+function toggleMusic(){
+  if(!playing){
+    audio.play().catch(()=>{});
+    playing = true;
+  } else {
+    audio.pause();
+    playing = false;
+  }
+  updateMusicUI();
+}
+
+function updateMusicUI(){
+  document.getElementById('mbtn').textContent=playing?'\u23F8':'\u266A';
+  document.getElementById('mlbl').textContent=playing?'\u266A Mengalun lembut untukmu':'Sentuh untuk musik lembut';
+  const vbs=document.querySelectorAll('.vb');
+  vbs.forEach(v=>v.style.animation=playing?`vizA ${0.5+Math.random()*0.5}s ease-in-out infinite alternate`:'none');
+}
+
+const vstyle=document.createElement('style');
+vstyle.textContent='@keyframes vizA{from{height:4px}to{height:16px}}';
+document.head.appendChild(vstyle);
+
+buildNav();buildGarden();buildTl();buildOW();buildPetals();
+// Pastikan screen pertama aktif setelah semua script jalan
+go(0);
+</script>
+</body>
+</html>
